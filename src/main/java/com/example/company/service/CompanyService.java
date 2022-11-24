@@ -33,8 +33,7 @@ public class CompanyService implements IService<Company> {
         companyRepository.deleteById(id);
     }
 
-    @Override
-    public List<Company> findAllByName()
+
 
 
 }
