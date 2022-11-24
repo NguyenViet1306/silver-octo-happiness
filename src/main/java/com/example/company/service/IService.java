@@ -1,5 +1,6 @@
 package com.example.company.service;
 
+import com.example.company.model.Company;
 import jdk.nashorn.internal.runtime.options.Option;
 
 import java.util.List;
@@ -13,5 +14,7 @@ public interface IService<T> {
      T save(T t);
 
      void delete(Long id);
+
+    List<T> findCompaniesByNameContaining(String name);
 
 }

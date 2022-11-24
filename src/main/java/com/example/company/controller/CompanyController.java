@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api")
 public class CompanyController {
-
     @Autowired
-    private IService iService;
+    private IService<Company> iService;
 
     @GetMapping
     private ResponseEntity<List<Company>> findAll() {
@@ -23,8 +23,12 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<?> findById(@PathVariable Long id) {
-        return new ResponseEntity<>(iService.findById(id), HttpStatus.OK);
+    private ResponseEntity<?> findById(@PathVariable("id") Long id) {
+        Optional<Company> companyOptional = iService.findById(id);
+        if (companyOptional.isPresent()){
+            return ResponseEntity.ok().body(companyOptional.get());
+        }
+        return ResponseEntity.badRequest().body(null);
     }
 
     @PostMapping
@@ -32,16 +36,24 @@ public class CompanyController {
         return new ResponseEntity<>(iService.save(company), HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
-    private ResponseEntity<?> updateCompany(@PathVariable Long id, @RequestBody Company company) {
-        company.setId(id);
-        iService.save(company);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/update")
+    private ResponseEntity<?> updateCompany(@RequestBody Company company) {
+        Optional<Company> companyOptional = iService.findById(company.getId());
+        if (companyOptional.isPresent()){
+            iService.save(company);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return ResponseEntity.badRequest().body(null);
     }
 
     @DeleteMapping("/delete/{id}")
-    private ResponseEntity<?> deleteCompany(@PathVariable Long id) {
+    private ResponseEntity<?> deleteCompany(@PathVariable("id") Long id) {
         iService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/getCompanyByName/{name}")
+    private ResponseEntity<List<Company>> findAllByNameContaining(@PathVariable("name") String name) {
+        return new ResponseEntity<>(iService.findCompaniesByNameContaining(name), HttpStatus.OK);
     }
 }

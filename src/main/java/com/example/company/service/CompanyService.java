@@ -33,7 +33,10 @@ public class CompanyService implements IService<Company> {
         companyRepository.deleteById(id);
     }
 
-
+    @Override
+    public List<Company> findCompaniesByNameContaining(String name) {
+        return companyRepository.findCompaniesByNameContaining("%" + name+ "%");
+    }
 
 
 }
