@@ -52,7 +52,7 @@ public class CompanyController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/getCompanyByName/{name}")
+    @GetMapping("/findCompanyByName/{name}")
     private ResponseEntity<List<Company>> findAllByNameContaining(@PathVariable("name") String name) {
         return new ResponseEntity<>(iService.findCompaniesByNameContaining(name), HttpStatus.OK);
     }
