@@ -43,7 +43,8 @@ public class CompanyController {
             iService.save(company);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return ResponseEntity.badRequest().body(null);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 
     @DeleteMapping("/delete/{id}")
